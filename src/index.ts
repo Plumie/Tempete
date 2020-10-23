@@ -12,7 +12,7 @@ const fs = require('fs-extra');
 
 class Glacier {
 	constructor() {
-		this.clearScreen();
+        this.clearScreen();
 		this.chooseDependencies();
 	}
 
