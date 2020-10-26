@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import GenerateProject from "./GenerateProject";
+
 const chalk = require("chalk");
 const clear = require("clear");
 const figlet = require("figlet");
@@ -8,12 +10,20 @@ const program = require("commander");
 const inquirer = require("inquirer");
 const { exec } = require("child_process");
 const ora = require("ora");
-const fs = require('fs-extra');
 
 class Glacier {
+
+	output: string[];
+
 	constructor() {
-        this.clearScreen();
-		this.chooseDependencies();
+		this.output = [];
+		this.clearScreen();
+		this.init();
+	}
+
+	public init = async () => {
+		const result = await this.chooseDependencies();
+		await console.log('asynchronous');
 	}
 
 	public clearScreen = () => {
@@ -25,76 +35,95 @@ class Glacier {
 					font: "cosmike",
 				})
 			)
-		);
-		console.log("\n");
+		, "\n");
 	};
 
-	public chooseDependencies = () => {
-		program
+	public chooseDependencies = async () => {
+		let output: [] = [];
+		let questions: object[] = [{
+			type: "list",
+			name: "bundlers",
+			message: chalk.cyan.underline("Module bundler"),
+			choices:[
+				{
+					name: "Parcel",
+					value: {
+						name: "Parcel",
+						packages: "parcel-bundler",
+					}
+				}
+			]
+		},
+		{
+			type: "list",
+			name: "css",
+			message: chalk.cyan.underline("CSS Preprocessor"),
+			choices:[
+				{
+					name: "SCSS",
+					value: {
+						name: "SCSS",
+						packages: "sass",
+					}
+				},
+				{
+					name: "none",
+					value: {
+						name: "none",
+						packages: "",
+					}
+				}
+			]
+		},
+	
+		];
+
+		await program
 			.name("glacier")
 			.version("0.0.1")
 			.description("A complete solution to build personalized boilerplates")
 			.parse(process.argv);
 
-		inquirer
-			.prompt([
-				{
-					type: "checkbox",
-					name: "packages",
-					message: "Which package do you want to use ?",
-					choices:[
-						{
-							name: "Parcel",
-							value: {
-								name: "Parcel",
-								package: "parcel-bundler",
-							},
-						},
-						{
-							name: "Three.js",
-							value: {
-								name: "Three.js",
-								package: "three",
-							},
-						},
-						{
-							name: "Tailwind",
-							value: {
-								name: "Tailwind",
-								package: "tailwindcss",
-							},
-						},
-					],
-				},
-			])
-			.then((answers) => {
-				this.installDependencies(answers);
+		await inquirer
+			.prompt(questions)
+			.then(async (answers) => {
+				await this.questionsParser(answers);
 			});
 	};
 
-	public installDependencies = (dependencies) => {
-		console.log(chalk.cyan.bold('Installing dependencies...'))
-		for (let i: number = 0; i < dependencies.packages.length; i++) {
-			let fullName: string = dependencies.packages[i].name;
-			let packageName: string = dependencies.packages[i].package;
-			let spinner: any = ora(`Installing: ${fullName}`).start();
-			exec(
-				`npm install ${packageName} --prefix ./`,
-				(error, stdout, stderr) => {
-					if (error == null) {
-						this.createDefaultFiles(packageName);
-						spinner.succeed(`Installed: ${fullName}`);
-						
-					} else {
-						spinner.fail(`Error: ${fullName}`);
-					}
+	public questionsParser = async (dependencies) => {
+		console.log(chalk.cyan.bold('\nInstalling dependencies...'))
+		for (let dependency in dependencies) {
+			if(Array.isArray(dependencies[dependency])) {
+				for (let i: number = 0; i < dependencies[dependency].length; i++) {
+					await this.installDependencies(dependencies[dependency][i]);
 				}
-			);
+			} else {
+				await this.installDependencies(dependencies[dependency]);
+			}
 		}
 	};
 
-	public createDefaultFiles = (packages) => {
-		fs.copy('../defaultFiles', process.cwd());
+	public installDependencies = (dependency) => {
+		let fullName: string = dependency.name;
+		let packageName: string = dependency.packages;
+		if(packageName != '') {
+			this.output.push(packageName);
+			let spinner: any = ora(`Installing: ${fullName}`).start();
+			return new Promise((resolve, reject) => {
+				exec(
+					`npm install ${packageName} --prefix ./`,
+					(error, stdout, stderr) => {
+						if (error == null) {
+							spinner.succeed(`Installed: ${fullName}`);
+							resolve(stdout? stdout : stderr);
+						} else {
+							spinner.fail(`Error: ${fullName}`);
+						}
+					}
+				);
+			});
+		}
 	}
 }
 
