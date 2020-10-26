@@ -1,4 +1,4 @@
-# Glacier
+# Tempete
 A fresh CLI tool to create some shiny and highly customizable templates
 
 ## Warning

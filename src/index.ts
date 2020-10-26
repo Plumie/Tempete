@@ -30,7 +30,7 @@ class Glacier {
 		clear();
 		console.log(
 			chalk.cyan(
-				figlet.textSync("Glacier", {
+				figlet.textSync("Tempete", {
 					horizontalLayout: "full",
 					font: "cosmike",
 				})
@@ -78,8 +78,8 @@ class Glacier {
 	
 		];
 
-		await program
-			.name("glacier")
+		program
+			.name("tempete")
 			.version("0.0.1")
 			.description("A complete solution to build personalized boilerplates")
 			.parse(process.argv);
