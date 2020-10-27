@@ -1,0 +1,12 @@
+{
+    "Tailwind": {
+        "files": [
+            {
+                "style": "@tailwind base;\n@tailwind components;\n@tailwind utilities;"
+            }
+        ],
+        "commands": [
+            "npx tailwindcss init -p"
+        ]
+    }
+}

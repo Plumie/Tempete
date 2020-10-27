@@ -1,9 +1,9 @@
 {
-  "name": "glacier",
+  "name": "tempete",
   "version": "0.0.1",
   "main": "./lib/index.js",
   "bin": {
-    "glacier": "./lib/index.js"
+    "tempete": "./lib/index.js"
   },
   "scripts": {
     "start": "nodemon --no-stdin --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
@@ -26,8 +26,9 @@
     "three": "^0.121.1"
   },
   "devDependencies": {
-    "@types/node": "^14.14.0",
+    "@types/node": "^14.14.3",
     "nodemon": "^2.0.6",
+    "sass": "^1.27.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   }
