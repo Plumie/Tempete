@@ -109,6 +109,20 @@ class Glacier {
 			},
 			{
 				type: "checkbox",
+				name: "jsFrameworks",
+				message: chalk.cyan.underline("JS Frameworks / Libraries"),
+				choices: [
+					{
+						name: "AlpineJS",
+						value: {
+							name: "AlpineJS",
+							packages: "alpinejs"
+						}
+					}
+				]
+			},
+			{
+				type: "checkbox",
 				name: "cssFrameworks",
 				message: chalk.cyan.underline("CSS Frameworks"),
 				choices: [

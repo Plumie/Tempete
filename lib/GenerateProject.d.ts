@@ -5,5 +5,6 @@ export default class GenerateProject {
     generateIndex: () => Promise<void>;
     generateStyle: (content: any) => Promise<void>;
     generateScript: (content: any) => Promise<void>;
+    generateFile: (name: any, content: any) => Promise<void>;
     generateConfig: () => Promise<void>;
 }

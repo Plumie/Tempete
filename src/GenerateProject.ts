@@ -12,7 +12,8 @@ export default class GenerateProject {
 		this.dependencies = dependencies;
 		this.config = {
             css: "css",
-            js: "js"
+			js: "js",
+			body: "",
         };
 	}
 
@@ -52,6 +53,14 @@ export default class GenerateProject {
         });
 	}
 
+	public generateFile = async (name, content) => {
+        fs.writeFile(name, content, { flag: "a" }, function (err) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+	}
+
 	public generateConfig = async () => {
 		await fs.readFile(
 			__dirname + "/config/config.json",
@@ -70,7 +79,6 @@ export default class GenerateProject {
 					).start();
 					let packageConfig = data[this.dependencies[i]];
 					if (packageConfig) {
-						let commands = packageConfig.commands;
 						let files = packageConfig.files;
 
 						for (let k = 0; k < files.length; k++) {
@@ -79,23 +87,33 @@ export default class GenerateProject {
 								await this.generateStyle(file.content);
 							} else if (file.name == "script") {
 								await this.generateScript(file.content);
+							} else if (file.name == "index") {
+								this.config.body = file.content,
+								await this.generateIndex();
+							} else {
+								await this.generateFile(file.name, file.content);
 							}
 						}
 
-						for (let j = 0; j < commands.length; j++) {
-							let command = commands[j];
-							return new Promise((resolve, reject) => {
-								exec(command, (error, stdout, stderr) => {
-									if (error == null) {
-										spinner.succeed(
-											chalk.green("Configured: ") + this.dependencies[i]
-										);
-										resolve(stdout ? stdout : stderr);
-									} else {
-										spinner.fail(chalk.red("Error: ") + this.dependencies[i]);
-									}
+						if(packageConfig.commands) {
+							let commands = packageConfig.commands;
+							for (let j = 0; j < commands.length; j++) {
+								let command = commands[j];
+								return new Promise((resolve, reject) => {
+									exec(command, (error, stdout, stderr) => {
+										if (error == null) {
+											spinner.succeed(
+												chalk.green("Configured: ") + this.dependencies[i]
+											);
+											resolve(stdout ? stdout : stderr);
+										} else {
+											spinner.fail(chalk.red("Error: ") + this.dependencies[i]);
+										}
+									})
 								})
-							})
+							}
+						} else {
+							spinner.succeed(chalk.green("Configured: ") + this.dependencies[i]);
 						}
 					} else {
 						spinner.succeed(chalk.green("Configured: ") + this.dependencies[i]);

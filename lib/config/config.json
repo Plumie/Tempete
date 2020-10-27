@@ -2,11 +2,20 @@
     "Tailwind": {
         "files": [
             {
-                "style": "@tailwind base;\n@tailwind components;\n@tailwind utilities;"
+                "name": "style",
+                "content": "@tailwind base;\n@tailwind components;\n@tailwind utilities;"
             }
         ],
         "commands": [
             "npx tailwindcss init -p"
+        ]
+    },
+    "AlpineJS": {
+        "files": [
+            {
+                "name": "script",
+                "content": "import 'alpinejs';"
+            }
         ]
     }
 }
