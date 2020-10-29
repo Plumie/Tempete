@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const ejs = require("ejs");
 const fs = require("fs-extra");
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 const ora = require("ora");
 
 export default class GenerateProject {
@@ -99,18 +99,16 @@ export default class GenerateProject {
 							let commands = packageConfig.commands;
 							for (let j = 0; j < commands.length; j++) {
 								let command = commands[j];
-								return new Promise((resolve, reject) => {
-									exec(command, (error, stdout, stderr) => {
-										if (error == null) {
-											spinner.succeed(
-												chalk.green("Configured: ") + this.dependencies[i]
-											);
-											resolve(stdout ? stdout : stderr);
-										} else {
-											spinner.fail(chalk.red("Error: ") + this.dependencies[i]);
-										}
-									})
-								})
+								// return new Promise((resolve, reject) => {
+									try {
+										execSync(command, {stdio: 'ignore'});
+										spinner.succeed(
+											chalk.green("Configured: ") + this.dependencies[i]
+										);
+									} catch(e) {
+										spinner.fail(chalk.red("Error: ") + this.dependencies[i]);
+									}
+								// })
 							}
 						} else {
 							spinner.succeed(chalk.green("Configured: ") + this.dependencies[i]);

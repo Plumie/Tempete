@@ -124,7 +124,7 @@ class Glacier {
 			{
 				type: "checkbox",
 				name: "cssFrameworks",
-				message: chalk.cyan.underline("CSS Frameworks"),
+				message: chalk.cyan.underline("CSS Frameworks / Libraries"),
 				choices: [
 					{
 						name: "Tailwind",
@@ -132,6 +132,20 @@ class Glacier {
 							name: "Tailwind",
 							packages: "tailwindcss"
 						}
+					},
+					{
+						name: "Bootstrap",
+						value: {
+							name: "Bootstrap",
+							packages: "bootstrap"
+						}
+					},
+					{
+						name: "Material",
+						value: {
+							name: "Material",
+							packages: "@material/base"
+						} 
 					}
 				]
 			}

@@ -1,4 +1,20 @@
 {
+    "AlpineJS": {
+        "files": [
+            {
+                "name": "script",
+                "content": "import 'alpinejs';\n"
+            }
+        ]
+    },
+    "Bootstrap": {
+        "files": [
+            {
+                "name": "script",
+                "content": "import 'bootstrap/dist/css/bootstrap.min.css';\n"
+            }
+        ]
+    },
     "Tailwind": {
         "files": [
             {
@@ -10,11 +26,11 @@
             "npx tailwindcss init -p"
         ]
     },
-    "AlpineJS": {
+    "Material": {
         "files": [
             {
                 "name": "script",
-                "content": "import 'alpinejs';"
+                "content": "import {MDCComponent, MDCFoundation} from '@material/base';\n"
             }
         ]
     }
